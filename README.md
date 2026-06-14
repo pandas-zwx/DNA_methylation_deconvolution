@@ -55,9 +55,8 @@ We use two public datasets to construct the reference map:
 
 - Reference map:  
   `reference_map_df_CpG5_CV0.35_Top50_NoDis.parquet`
-form:
-```
-reference_map_df.iloc[0:5, 0:5]
+Example (`reference_map_df.iloc[0:5, 0:5]`):
+
 | Block | Adipocytes | Aorta-Endothel | Aorta-Smooth-Muscle | Bladder-Epithelial | Bladder-Smooth-Muscle |
 |------|------------|----------------|---------------------|--------------------|----------------------|
 | chr18_79358000_79358500 | 67.405333 | 20.8330 | 27.083 | 29.0000 | 8.333 |
@@ -66,15 +65,12 @@ reference_map_df.iloc[0:5, 0:5]
 | chr22_38317000_38317500 | 11.347667 | 2.3370 | 4.028 | 3.5728 | 2.410 |
 | chr1_153774500_153775000 | 13.373667 | 26.5775 | 24.642 | 41.6622 | 22.517 |
 
-```
-
 
 - Annotation file:  
   `final_marker_annotation_CpG5_CV0.35_Top50_NoDis.parquet`  
   (Contains hyper/hypo methylation labels and CpG counts of each blocks)
-form:
-```
-final_marker_annotation.iloc[0:5, 0:5]
+Example (`final_marker_annotation.iloc[0:5, 0:4]`):
+
 | block | tissue | marker_type | cpg_count |
 |------|--------|-------------|----------|
 | chr10_100342000_100342500 | Cortex-Neuron | hyper | 5 |
@@ -82,8 +78,6 @@ final_marker_annotation.iloc[0:5, 0:5]
 | chr10_100881000_100881500 | Small-int-Epithelial | hypo | 5 |
 | chr10_101113000_101113500 | Breast-Basal-Epithelial | hyper | 7 |
 | chr10_101123000_101123500 | Liver-Hepatocytes | hyper | 28 |
-
-```
 
 ---
 
