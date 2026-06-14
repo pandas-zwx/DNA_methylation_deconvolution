@@ -20,7 +20,7 @@ chr1    10470   10472   1
 
 Example: 
 ```
-bash MeDen_per_tissue_cell.sh hg38_CpG_dyad_clean.sorted.bed hg38_500bp_blocks_with_CpG_dyad.bed your_sample_bed_file ./output pancreas_sample1
+bash MeDen_per_tissue_cell.sh hg38_CpG_dyad_clean.sorted.bed hg38_500bp_blocks_with_CpG_dyad.bed your_sample_bed_file ./output prefix
 ```
 Output:
 ```
