@@ -55,6 +55,7 @@ We use two public datasets to construct the reference map:
 
 - Reference map:  
   `reference_map_df_CpG5_CV0.35_Top50_NoDis.parquet`
+  
 Example (`reference_map_df.iloc[0:5, 0:5]`):
 
 | Block | Adipocytes | Aorta-Endothel | Aorta-Smooth-Muscle | Bladder-Epithelial | Bladder-Smooth-Muscle |
@@ -69,6 +70,7 @@ Example (`reference_map_df.iloc[0:5, 0:5]`):
 - Annotation file:  
   `final_marker_annotation_CpG5_CV0.35_Top50_NoDis.parquet`  
   (Contains hyper/hypo methylation labels and CpG counts of each blocks)
+
 Example (`final_marker_annotation.iloc[0:5, 0:4]`):
 
 | block | tissue | marker_type | cpg_count |
