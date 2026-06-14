@@ -58,12 +58,13 @@ We use two public datasets to construct the reference map:
 form:
 ```
 reference_map_df.iloc[0:5, 0:5]
-Adipocytes	Aorta-Endothel	Aorta-Smooth-Muscle	Bladder-Epithelial	Bladder-Smooth-Muscle
-chr18_79358000_79358500	67.405333	20.8330	27.083	29.0000	8.333
-chr5_181053500_181054000	21.302000	5.2405	3.851	5.5152	4.864
-chr8_127391500_127392000	16.136667	46.1000	31.464	46.8748	24.076
-chr22_38317000_38317500	11.347667	2.3370	4.028	3.5728	2.410
-chr1_153774500_153775000	13.373667	26.5775	24.642	41.6622	22.517
+| Block | Adipocytes | Aorta-Endothel | Aorta-Smooth-Muscle | Bladder-Epithelial | Bladder-Smooth-Muscle |
+|------|------------|----------------|---------------------|--------------------|----------------------|
+| chr18_79358000_79358500 | 67.405333 | 20.8330 | 27.083 | 29.0000 | 8.333 |
+| chr5_181053500_181054000 | 21.302000 | 5.2405 | 3.851 | 5.5152 | 4.864 |
+| chr8_127391500_127392000 | 16.136667 | 46.1000 | 31.464 | 46.8748 | 24.076 |
+| chr22_38317000_38317500 | 11.347667 | 2.3370 | 4.028 | 3.5728 | 2.410 |
+| chr1_153774500_153775000 | 13.373667 | 26.5775 | 24.642 | 41.6622 | 22.517 |
 
 ```
 
@@ -74,12 +75,13 @@ chr1_153774500_153775000	13.373667	26.5775	24.642	41.6622	22.517
 form:
 ```
 final_marker_annotation.iloc[0:5, 0:5]
-block	tissue	marker_type	cpg_count
-0	chr10_100342000_100342500	Cortex-Neuron	hyper	5
-1	chr10_100659500_100660000	Kidney-Glomerular-Epithelial	hyper	32
-2	chr10_100881000_100881500	Small-int-Epithelial	hypo	5
-3	chr10_101113000_101113500	Breast-Basal-Epithelial	hyper	7
-4	chr10_101123000_101123500	Liver-Hepatocytes	hyper	28
+| block | tissue | marker_type | cpg_count |
+|------|--------|-------------|----------|
+| chr10_100342000_100342500 | Cortex-Neuron | hyper | 5 |
+| chr10_100659500_100660000 | Kidney-Glomerular-Epithelial | hyper | 32 |
+| chr10_100881000_100881500 | Small-int-Epithelial | hypo | 5 |
+| chr10_101113000_101113500 | Breast-Basal-Epithelial | hyper | 7 |
+| chr10_101123000_101123500 | Liver-Hepatocytes | hyper | 28 |
 
 ```
 
@@ -157,15 +159,31 @@ chr1    13500   14000   30.000
 
 ---
 
+
+How i process Main methylation atlas and Megakaryocyte dataset
+
 ## ENCODE BigWig Processing Pipeline
 
 Scripts used:
 
 - BigWig → BED conversion:  
-  `/home/u24211510018/workspace/Atlas_WGBS/all_bigwig/ToBed.slurm`
+  `ToBed.slurm`
 
 - Methylation density per tissue/cell type:  
-  `/home/u24211510018/workspace/Atlas_WGBS/all_bed/tissue_cell_type/MeDen_per_tissue_cell.slurm`
+  `MeDen_per_tissue_cell.slurm`
+
+Big wig input
+```
+bigWigToBedGraph GSM5652176_Adipocytes-Z000000T7.hg38.bigwig  stdout | head -10
+chr1	10468	10470	0.667
+chr1	10470	10472	0.333
+chr1	10483	10485	0.667
+chr1	10488	10490	1
+chr1	10492	10494	0.5
+chr1	10496	10498	0.5
+```
+
+
 
 Example outputs:
 
@@ -188,7 +206,7 @@ chr1    10500   11000   59.306
 Pipeline:
 
 - Source directory:  
-  `/home/u24211510018/workspace/Atlas_WGBS/Megakaryocyte/GSE87196_RAW/MK_D3_sample/`
+  `mk.slurm`
 
 - Merge all samples from one individual
 - Convert into CpG dyad-based methylation density
@@ -266,9 +284,6 @@ tissue_mapping = {
     'Endothelial cells': ['Saphenous-Vein-Endothel','Aorta-Endothel', 'Pancreas-Endothel', 'Pancreas-Islet-Endothel', 'Lung-Alveolar-Endothel', 'Kidney-Glomerular-Endothel','Kidney-Tubular-Endothel', 'Liver-Endothelium'],
     'Smooth muscle cells': ['Aorta-Smooth-Muscle', 'Coronary-Artery-Smooth-Muscle', 'Prostate-Smooth-Muscle', 'Bladder-Smooth-Muscle', 'Lung-Bronchus-Smooth-Muscle']
 }
-
-
-
 
 ```
 
