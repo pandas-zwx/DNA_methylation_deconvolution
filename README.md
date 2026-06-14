@@ -7,7 +7,7 @@ For the deconvolution task, a reference map is required. In this project, we con
 
 ## How to Use
 
-1. Generate `hg38_CpG_dyad_clean.sorted.bed` and `hg38_500bp_blocks_with_CpG_dyad.bed`.
+1. Generate `hg38_CpG_dyad_clean.sorted.bed` and `hg38_500bp_blocks_with_CpG_dyad.bed`(find_CpG.slurm/block_generate.sh).
 2. Download reference map and reference map annotation.
 3. Reorganize your methylation data into this form:
 
@@ -18,7 +18,11 @@ chr1    10470   10472   1
 
 4. Use `MeDen_per_tissue_cell.sh` to convert BED file to methylation density file.
 
-Example:
+Example: 
+```
+bash MeDen_per_tissue_cell.sh hg38_CpG_dyad_clean.sorted.bed hg38_500bp_blocks_with_CpG_dyad.bed your_sample_bed_file ./output pancreas_sample1
+```
+Output:
 ```
 chr1    12500   13000   7.143
 chr1    13000   13500   51.000
