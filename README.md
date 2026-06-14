@@ -3,25 +3,30 @@
 ## Overview
 For the deconvolution task, a reference map is required. In this project, we construct a DNA methylation deconvolution reference map using DNA methylation density as the main feature.
 
+---
 
-## how to use
-1. generate hg38_CpG_dyad_clean.sorted.bed and hg38_500bp_blocks_with_CpG_dyad.bed
-2. download ref map and ref map annotation
-3. reorganize your methylation data into this form:
+## How to Use
+
+1. Generate `hg38_CpG_dyad_clean.sorted.bed` and `hg38_500bp_blocks_with_CpG_dyad.bed`.
+2. Download reference map and reference map annotation.
+3. Reorganize your methylation data into this form:
+
+```
 chr1    10468   10470   0.667
 chr1    10470   10472   1
-4. use MeDen_per_tissue_cell.sh convert bed file to methylation density file.
 ```
-chrom  start   end     methylation_density
-```
-example:
+
+4. Use `MeDen_per_tissue_cell.sh` to convert BED file to methylation density file.
+
+Example:
 ```
 chr1    12500   13000   7.143
 chr1    13000   13500   51.000
 chr1    13500   14000   30.000
 ```
 
-5. use run_nnls.ipynb to deconvolution your sample.
+5. Use `run_nnls.ipynb` to perform deconvolution on your sample.
+
 
 
 ---
@@ -36,48 +41,63 @@ $$
 ---
 
 
-## Methylation Level(beta) Calculation
+## Methylation Level (Beta) Calculation
 
-Note: we don't consider the strand-specific DNA methylation level, we consider 
-5' C-G 3'
-3' G-C 5'
-as one CpG site.
+Note: We do not consider strand-specific DNA methylation levels. Instead, we treat:
 
-So i show how to calculate beta value in three cases.
+- 5' C–G 3'
+- 3' G–C 5'
 
+as the same CpG site.
 
-### Strand-aware case1
+Below are three cases for calculating beta values.
+
+---
+
+### Strand-aware Case 1
+
 If Watson and Crick strand depths are available:
-example:
-#CHROM  START   END     MOD_LEVEL       MOD     UNMOD   REF     ALT     SPECIFIC_CONTEXT        CONTEXT SNV     TOTAL_DEPTH
-chr1    48150   48151   1.0     5       0       C       T       CGG     CpG     No      29
-chr1    48151   48152   0.895   17      2       G       A       CGC     CpG     No      29
-chr1    48172   48173   1.0     4       0       C       T       CGT     CpG     No      33
-chr1    48173   48174   0.867   13      2       G       A       CGA     CpG     No      33
 
+Example:
+```
+#CHROM  START   END     MOD_LEVEL   MOD UNMOD REF ALT SPECIFIC_CONTEXT CONTEXT SNV TOTAL_DEPTH
+chr1    48150   48151   1.0         5   0     C   T   CGG              CpG     No  29
+chr1    48151   48152   0.895       17  2     G   A   CGC              CpG     No  29
+chr1    48172   48173   1.0         4   0     C   T   CGT              CpG     No  33
+chr1    48173   48174   0.867       13  2     G   A   CGA              CpG     No  33
+```
 
 $$
 \beta = \frac{mC_{Watson} + mC_{Crick}}{depth_{Watson} + depth_{Crick}}
 $$
 
-beta_48150-48152 = (5 + 17)/(5 + 0 + 17 + 2)
+Example:
+```
+beta_48150-48152 = (5 + 17) / (5 + 0 + 17 + 2)
+```
 
+---
 
-### Strand-aware case2
-If strand-specific depth is not available, only have beta value of different strand:
+### Strand-aware Case 2
+
+If strand-specific depth is not available:
 
 $$
 \beta = \frac{\beta_{Watson} + \beta_{Crick}}{2}
 $$
 
-### Non-strand-aware
+---
+
+### Non-strand-aware Case
+
+```
 chr1    10468   10470   0.667
 chr1    10470   10472   1
 chr1    10483   10485   0.667
 chr1    10488   10490   1
+```
 
-this result didn't distinguish watson and crick strand, so we don't need to merge.
-
+In this case, strand information is not distinguished, so no merging is required.
 
 ---
 
@@ -173,6 +193,7 @@ To ensure compatibility when using this reference map, you MUST use the same gen
 - "clean" means CpGs located in standard autosomal chromosomes  
 - File is sorted
 
+```
 head -10 hg38_CpG_dyad_clean.sorted.bed
 chr1    10468   10470   CpG_1
 chr1    10470   10472   CpG_2
@@ -184,7 +205,7 @@ chr1    10524   10526   CpG_7
 chr1    10541   10543   CpG_8
 chr1    10562   10564   CpG_9
 chr1    10570   10572   CpG_10
-
+```
 
 
 ### Genomic Blocks
@@ -195,6 +216,7 @@ chr1    10570   10572   CpG_10
   - `hg38_500bp_four_col_blocks.bed` (via `block_generate.sh`)
   - processed using `find_CpG.slurm`
 
+```
 head -10 hg38_500bp_blocks_with_CpG_dyad.bed
 chr1    10000   10500   block_21        6
 chr1    10500   11000   block_22        82
@@ -206,7 +228,7 @@ chr1    13000   13500   block_27        5
 chr1    13500   14000   block_28        10
 chr1    14000   14500   block_29        7
 chr1    14500   15000   block_30        16
-
+```
 
 Each block records:
 - genomic coordinates
@@ -216,14 +238,13 @@ Each block records:
 
 
 
+## Testing Results
 
+In the last part of the notebook, I used ENCODE pancreas WGBS data and breast cancer TAPS data to test my reference map.
 
-In the last part of ipynb file, I use pancreas WGBS data of ENCODE and a breast cancer TAPS data to test my ref map.
+The results are shown below. For the ENCODE pancreas deconvolution, our results are highly consistent with those reported in the paper "A DNA Methylation Atlas of Normal Human Cell Types". In Figure 6i of that paper, the authors applied their own method to deconvolve the same ENCODE pancreas WGBS dataset (you can verify this).
 
-the result is below, for ENCODE pancreas deconvolution, our result is highly consistent with the paper "A DNA Methylation Atlas of Normal Human Cell Types". 
-In this paper Fig. 6i, reseacher use their method to deconvolution ENCODE pancreas WGBS data(you can check).
-
-For breast cancer deconvolution, i didn't compare our result to other researcher publish.
+For the breast cancer deconvolution, I did not compare our results with any published papers from other researchers.
 
 
 ```
@@ -496,9 +517,9 @@ residual: 841.9301245656545
 
 
 
-How I process Main methylation atlas and Megakaryocyte dataset
+## How I process Main methylation atlas and Megakaryocyte dataset
 
-## ENCODE BigWig Processing Pipeline
+### ENCODE BigWig Processing Pipeline
 
 Scripts used:
 
@@ -523,13 +544,13 @@ chr1	10496	10498	0.5
 
 Example outputs:
 
-### Sorted BED
+#### Sorted BED
 ```
 chr1    10468   10470   0.667
 chr1    10470   10472   1
 ```
 
-### Methylation density BED
+#### Methylation density BED
 ```
 chr1    10000   10500   86.117
 chr1    10500   11000   59.306
@@ -537,7 +558,7 @@ chr1    10500   11000   59.306
 
 ---
 
-## Single-cell Megakaryocyte Data Processing
+### Single-cell Megakaryocyte Data Processing
 
 Pipeline:
 
@@ -547,12 +568,12 @@ Pipeline:
 - Merge all samples from one individual
 - Convert into CpG dyad-based methylation density
 
-Example raw data:
+#### Example raw data:
 ```
 chr15   17005692   1   1
 ```
 
-Final output:
+#### Final output:
 ```
 chr1    10000   10500   50.000
 chr1    10500   11000   8.537
