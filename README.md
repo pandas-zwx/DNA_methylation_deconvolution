@@ -8,7 +8,9 @@ For the deconvolution task, a reference map is required. In this project, we con
 ## DNA Methylation Density Definition
 DNA methylation density is defined as:
 
-> Sum of beta values of CpGs within a genomic block divided by the number of CpGs in that block.
+$$
+D_{block} = \frac{1}{N}\sum_{i=1}^{N} \beta_i
+$$
 
 ---
 
@@ -31,12 +33,11 @@ We use two public datasets to construct the reference map:
 1. Convert public methylation datasets into DNA methylation density format.
 2. Combine datasets using:  
    `combined.py`  
-   `/home/u24211510018/workspace/Atlas_WGBS/R_script_data/combined.py`
 
 3. Process the combined matrix with the following steps:
 
    - Drop missing values (NA)
-   - Compute mean methylation density grouped by tissue type
+   - Compute mean methylation density grouped by cell/tissue type
    - Filter blocks with CpG count < 5 using:  
      `hg38_500bp_blocks_with_CpG_dyad.bed`
    - Filter blocks with coefficient of variation (CV) < 0.35
@@ -54,10 +55,33 @@ We use two public datasets to construct the reference map:
 
 - Reference map:  
   `reference_map_df_CpG5_CV0.35_Top50_NoDis.parquet`
+form:
+```
+reference_map_df.iloc[0:5, 0:5]
+Adipocytes	Aorta-Endothel	Aorta-Smooth-Muscle	Bladder-Epithelial	Bladder-Smooth-Muscle
+chr18_79358000_79358500	67.405333	20.8330	27.083	29.0000	8.333
+chr5_181053500_181054000	21.302000	5.2405	3.851	5.5152	4.864
+chr8_127391500_127392000	16.136667	46.1000	31.464	46.8748	24.076
+chr22_38317000_38317500	11.347667	2.3370	4.028	3.5728	2.410
+chr1_153774500_153775000	13.373667	26.5775	24.642	41.6622	22.517
+
+```
+
 
 - Annotation file:  
   `final_marker_annotation_CpG5_CV0.35_Top50_NoDis.parquet`  
-  (Contains hyper/hypo methylation labels and CpG counts)
+  (Contains hyper/hypo methylation labels and CpG counts of each blocks)
+form:
+```
+final_marker_annotation.iloc[0:5, 0:5]
+block	tissue	marker_type	cpg_count
+0	chr10_100342000_100342500	Cortex-Neuron	hyper	5
+1	chr10_100659500_100660000	Kidney-Glomerular-Epithelial	hyper	32
+2	chr10_100881000_100881500	Small-int-Epithelial	hypo	5
+3	chr10_101113000_101113500	Breast-Basal-Epithelial	hyper	7
+4	chr10_101123000_101123500	Liver-Hepatocytes	hyper	28
+
+```
 
 ---
 
@@ -102,16 +126,16 @@ Each block records:
 ### Strand-aware case
 If Watson and Crick strand depths are available:
 
-\[
+$$
 \beta = \frac{mC_{Watson} + mC_{Crick}}{depth_{Watson} + depth_{Crick}}
-\]
+$$
 
 ### Strand-agnostic case
 If strand-specific depth is not available:
 
-\[
+$$
 \beta = \frac{\beta_{Watson} + \beta_{Crick}}{2}
-\]
+$$
 
 ---
 
