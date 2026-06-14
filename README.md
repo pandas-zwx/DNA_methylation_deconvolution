@@ -529,7 +529,7 @@ Scripts used:
 - Methylation density per tissue/cell type:  
   `MeDen_per_tissue_cell.slurm`
 
-Big wig input
+#### Bigwig input
 ```
 bigWigToBedGraph GSM5652176_Adipocytes-Z000000T7.hg38.bigwig  stdout | head -10
 chr1	10468	10470	0.667
